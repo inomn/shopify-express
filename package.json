@@ -39,6 +39,7 @@
     "express-session": "^1.15.3",
     "knex": "^0.13.0",
     "node-fetch": "^1.7.3",
+    "pg": "^7.4.3",
     "prop-types": "^15.6.1",
     "qs": "^6.5.2",
     "raw-body": "^2.3.2",
