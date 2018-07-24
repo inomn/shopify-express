@@ -9,11 +9,25 @@ const defaultConfig = {
 };
 
 module.exports = class SQLStrategy {
-  constructor(config = defaultConfig) {
-    this.knex = Knex(config);
+  constructor(config) {
+    if (!config) {
+      console.error('SQLStrategy: empty config provided');
+    } else {
+      console.log(`Debug: ${config.dialect}.`);
+      try {
+        this.knex = Knex(config);
+      } catch (e) {
+        console.error(`KnexError: ${e}`);
+      }
+    }
   }
 
   initialize() {
+    if (!this.knex) {
+      console.error('SQLStrategy: knex is undefined!');
+      return false;
+    }
+
     return this.knex.schema.createTableIfNotExists('shops', table => {
       table.increments('id');
       table.string('shopify_domain');
