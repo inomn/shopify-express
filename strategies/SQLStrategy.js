@@ -28,11 +28,15 @@ module.exports = class SQLStrategy {
       return false;
     }
 
-    return this.knex.schema.createTableIfNotExists('shops', table => {
-      table.increments('id');
-      table.string('shopify_domain');
-      table.string('access_token');
-      table.unique('shopify_domain');
+    knex.schema.hasTable('shops').then((exists) => {
+      if (!exists) {
+        return this.knex.schema.createTable('shops', t => {
+          t.increments('id');
+          t.string('shopify_domain');
+          t.string('access_token');
+          t.unique('shopify_domain');
+        });
+      }
     });
   }
 
