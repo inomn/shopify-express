@@ -28,7 +28,7 @@ module.exports = class SQLStrategy {
       return false;
     }
 
-    knex.schema.hasTable('shops').then((exists) => {
+    this.knex.schema.hasTable('shops').then((exists) => {
       if (!exists) {
         return this.knex.schema.createTable('shops', t => {
           t.increments('id');
