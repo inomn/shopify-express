@@ -37,9 +37,15 @@ module.exports = class SQLStrategy {
   }
 
   async storeShop({ shop, accessToken }) {
-    await this.knex.raw(
-      `INSERT INTO shops (shopify_domain, access_token) VALUES ('${shop}', '${accessToken}') ON CONFLICT (shopify_domain) DO NOTHING;`
+    const result = await this.knex.raw(
+      `SELECT access_token FROM shops WHERE shopify_domain='${shop}';`
     );
+
+    if (!result.length) {
+      await this.knex.raw(
+        `INSERT INTO shops (shopify_domain, access_token) VALUES ('${shop}', '${accessToken}');`
+      );
+    }
 
     return {accessToken};
   }
