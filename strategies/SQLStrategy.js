@@ -37,7 +37,7 @@ module.exports = class SQLStrategy {
           t.unique('shopify_domain');
         });
       } else {
-        await this.knex.raw(
+        return this.knex.raw(
           `CREATE RULE shops_on_duplicate_ignore AS ON INSERT TO shops WHERE EXISTS (
             SELECT 1 FROM shops WHERE shopify_domain=NEW.shopify_domain
           ) DO INSTEAD NOTHING;`
