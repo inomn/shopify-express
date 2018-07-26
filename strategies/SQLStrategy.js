@@ -36,11 +36,17 @@ module.exports = class SQLStrategy {
           t.string('access_token');
           t.unique('shopify_domain');
         });
+      } else {
+        await this.knex.raw(
+          `CREATE RULE shops_on_duplicate_ignore AS ON INSERT TO shops WHERE EXISTS (
+            SELECT 1 FROM shops WHERE shopify_domain=NEW.shopify_domain
+          ) DO INSTEAD NOTHING;`
+        );
       }
     });
   }
 
-  async storeShop({ shop, accessToken }) {
+  async storeShop({shop, accessToken}) {
     const result = await this.knex.raw(
       `SELECT access_token FROM shops WHERE shopify_domain='${shop}';`
     );
@@ -54,7 +60,7 @@ module.exports = class SQLStrategy {
     return {accessToken};
   }
 
-  getShop({ shop }) {
+  getShop({shop}) {
     return this.knex('shops').where('shopify_domain', shop)
   }
 };
