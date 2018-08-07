@@ -1,5 +1,4 @@
 const PropTypes = require('prop-types');
-const Raven = require('raven');
 const createRouter = require('./routes');
 const createMiddleware = require('./middleware');
 const {MemoryStrategy} = require('./strategies');
@@ -21,7 +20,6 @@ const defaults = {
 
 module.exports = function shopify(shopifyConfig) {
   PropTypes.checkPropTypes(ShopifyConfigTypes, shopifyConfig, 'option', 'ShopifyExpress');
-  Raven.config('http://57242a9253b247c9b08d67c29b6503ec@sentry.swiftgift.me/23').install();
   const config = Object.assign({}, defaults, shopifyConfig);
 
   try {
@@ -30,6 +28,6 @@ module.exports = function shopify(shopifyConfig) {
       routes: createRouter(config),
     };
   } catch (e) {
-    Raven.captureException(e);
+    console.error(e);
   }
 };
